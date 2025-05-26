@@ -14,7 +14,8 @@ import {
   Trash2,
   MapPin,
   DollarSign,
-  User
+  User,
+  Users
 } from 'lucide-react';
 
 interface Buyer {
