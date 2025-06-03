@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { ArrowLeft, Plus, Mail, Upload } from 'lucide-react';
@@ -6,17 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import { useToast } from '@/hooks/use-toast';
 import MobileLayout from '@/components/MobileLayout';
 import BuyersViewOptions from '@/components/BuyersViewOptions';
-
-interface Buyer {
-  id: string;
-  name: string;
-  email: string;
-  phone: string;
-  location: string;
-  maxBudget: number;
-  preferences: string;
-  created_at: string;
-}
+import { Buyer } from '@/types/buyer';
 
 const Buyers = () => {
   const navigate = useNavigate();
