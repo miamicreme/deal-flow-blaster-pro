@@ -1,13 +1,13 @@
-
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { ArrowLeft, ArrowRight, CheckCircle } from 'lucide-react';
+import { ArrowLeft, ArrowRight, CheckCircle, Sparkles } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import PropertyLocation from '@/components/property/PropertyLocation';
 import PropertyFinancials from '@/components/property/PropertyFinancials';
 import PropertyFeatures from '@/components/property/PropertyFeatures';
 import PropertyImages from '@/components/property/PropertyImages';
+import useOpenAI from '@/hooks/useOpenAI';
 
 interface PropertyData {
   address: string;
@@ -28,6 +28,7 @@ interface PropertyData {
 
 const PropertyWizard = ({ onComplete }: { onComplete: (data: PropertyData) => void }) => {
   const { toast } = useToast();
+  const { analyzeProperty, isAnalyzing } = useOpenAI();
   const [currentStep, setCurrentStep] = useState(1);
   const [formData, setFormData] = useState<PropertyData>({
     address: '',
@@ -57,8 +58,21 @@ const PropertyWizard = ({ onComplete }: { onComplete: (data: PropertyData) => vo
     setFormData(prev => ({ ...prev, images: [...prev.images, ...files] }));
   };
 
+  const handleAIEnhance = () => {
+    if (currentStep === 3 && formData.address && formData.city && formData.state) {
+      analyzeProperty({ 
+        propertyData: formData, 
+        analysisType: 'property-description' 
+      });
+      
+      toast({
+        title: "AI Enhancement",
+        description: "Generating enhanced property description...",
+      });
+    }
+  };
+
   const nextStep = () => {
-    // Validate required fields for each step
     if (currentStep === 1) {
       if (!formData.address.trim() || !formData.city.trim() || !formData.state.trim() || !formData.zipCode.trim()) {
         toast({
@@ -114,10 +128,41 @@ const PropertyWizard = ({ onComplete }: { onComplete: (data: PropertyData) => vo
 
       case 3:
         return (
-          <PropertyFeatures
-            formData={formData}
-            onInputChange={handleInputChange}
-          />
+          <div className="space-y-4">
+            <PropertyFeatures
+              formData={formData}
+              onInputChange={handleInputChange}
+            />
+            {formData.address && formData.city && formData.state && (
+              <Card className="border-dashed border-2 border-blue-200">
+                <CardContent className="pt-6 text-center">
+                  <Sparkles className="h-8 w-8 mx-auto mb-2 text-blue-500" />
+                  <h3 className="font-semibold mb-2">AI Enhancement Available</h3>
+                  <p className="text-sm text-muted-foreground mb-4">
+                    Let AI generate a professional property description based on the details you've entered.
+                  </p>
+                  <Button 
+                    onClick={handleAIEnhance} 
+                    disabled={isAnalyzing}
+                    variant="outline"
+                    className="w-full"
+                  >
+                    {isAnalyzing ? (
+                      <>
+                        <Sparkles className="h-4 w-4 mr-2 animate-pulse" />
+                        Generating...
+                      </>
+                    ) : (
+                      <>
+                        <Sparkles className="h-4 w-4 mr-2" />
+                        Enhance with AI
+                      </>
+                    )}
+                  </Button>
+                </CardContent>
+              </Card>
+            )}
+          </div>
         );
 
       case 4:
