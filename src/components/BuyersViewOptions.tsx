@@ -10,18 +10,18 @@ import BuyersViewControls from '@/components/buyers/BuyersViewControls';
 const BuyersViewOptions = ({ buyers, onEdit, onDelete, onEmail }: BuyersViewProps) => {
   const [viewMode, setViewMode] = useState<'grid' | 'list' | 'table'>('grid');
   const [searchTerm, setSearchTerm] = useState('');
-  const [sortBy, setSortBy] = useState<'name' | 'budget' | 'created'>('name');
+  const [sortBy, setSortBy] = useState<'name' | 'email' | 'created'>('name');
 
   const filteredBuyers = buyers
     .filter(buyer => 
       buyer.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      buyer.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      buyer.location.toLowerCase().includes(searchTerm.toLowerCase())
+      (buyer.email && buyer.email.toLowerCase().includes(searchTerm.toLowerCase())) ||
+      (buyer.phone && buyer.phone.toLowerCase().includes(searchTerm.toLowerCase()))
     )
     .sort((a, b) => {
       switch (sortBy) {
-        case 'budget':
-          return b.maxBudget - a.maxBudget;
+        case 'email':
+          return (a.email || '').localeCompare(b.email || '');
         case 'created':
           return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
         default:

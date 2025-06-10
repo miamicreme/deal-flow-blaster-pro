@@ -9,24 +9,77 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      admin_settings: {
+        Row: {
+          admin_user_id: string | null
+          created_at: string | null
+          id: string
+          is_encrypted: boolean | null
+          setting_key: string
+          setting_value: Json | null
+          updated_at: string | null
+        }
+        Insert: {
+          admin_user_id?: string | null
+          created_at?: string | null
+          id?: string
+          is_encrypted?: boolean | null
+          setting_key: string
+          setting_value?: Json | null
+          updated_at?: string | null
+        }
+        Update: {
+          admin_user_id?: string | null
+          created_at?: string | null
+          id?: string
+          is_encrypted?: boolean | null
+          setting_key?: string
+          setting_value?: Json | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "admin_settings_admin_user_id_fkey"
+            columns: ["admin_user_id"]
+            isOneToOne: false
+            referencedRelation: "admin_users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       admin_users: {
         Row: {
           created_at: string | null
+          email: string | null
+          full_name: string | null
           id: string
+          is_active: boolean | null
+          last_login: string | null
+          permissions: Json | null
           role: string | null
           updated_at: string | null
           user_id: string | null
         }
         Insert: {
           created_at?: string | null
+          email?: string | null
+          full_name?: string | null
           id?: string
+          is_active?: boolean | null
+          last_login?: string | null
+          permissions?: Json | null
           role?: string | null
           updated_at?: string | null
           user_id?: string | null
         }
         Update: {
           created_at?: string | null
+          email?: string | null
+          full_name?: string | null
           id?: string
+          is_active?: boolean | null
+          last_login?: string | null
+          permissions?: Json | null
           role?: string | null
           updated_at?: string | null
           user_id?: string | null
@@ -173,6 +226,65 @@ export type Database = {
           },
         ]
       }
+      deal_analyses: {
+        Row: {
+          analysis_date: string | null
+          arv: number | null
+          comps: Json | null
+          confidence_score: number | null
+          created_at: string | null
+          deal_id: string | null
+          gpt_notes: string | null
+          gpt_summary: string | null
+          id: string
+          mao: number | null
+          max_assignment_fee: number | null
+          profit_margin: number | null
+          repairs_estimate: number | null
+          updated_at: string | null
+        }
+        Insert: {
+          analysis_date?: string | null
+          arv?: number | null
+          comps?: Json | null
+          confidence_score?: number | null
+          created_at?: string | null
+          deal_id?: string | null
+          gpt_notes?: string | null
+          gpt_summary?: string | null
+          id?: string
+          mao?: number | null
+          max_assignment_fee?: number | null
+          profit_margin?: number | null
+          repairs_estimate?: number | null
+          updated_at?: string | null
+        }
+        Update: {
+          analysis_date?: string | null
+          arv?: number | null
+          comps?: Json | null
+          confidence_score?: number | null
+          created_at?: string | null
+          deal_id?: string | null
+          gpt_notes?: string | null
+          gpt_summary?: string | null
+          id?: string
+          mao?: number | null
+          max_assignment_fee?: number | null
+          profit_margin?: number | null
+          repairs_estimate?: number | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "deal_analyses_deal_id_fkey"
+            columns: ["deal_id"]
+            isOneToOne: false
+            referencedRelation: "deals"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       deals: {
         Row: {
           ai_analysis: Json | null
@@ -277,6 +389,105 @@ export type Database = {
           user_id?: string
         }
         Relationships: []
+      }
+      markets: {
+        Row: {
+          city: string | null
+          created_at: string | null
+          created_by: string | null
+          filters: Json | null
+          id: string
+          name: string
+          scrape_schedule: string | null
+          sources: string[] | null
+          state: string | null
+          status: string | null
+          updated_at: string | null
+          zip_codes: string[] | null
+        }
+        Insert: {
+          city?: string | null
+          created_at?: string | null
+          created_by?: string | null
+          filters?: Json | null
+          id?: string
+          name: string
+          scrape_schedule?: string | null
+          sources?: string[] | null
+          state?: string | null
+          status?: string | null
+          updated_at?: string | null
+          zip_codes?: string[] | null
+        }
+        Update: {
+          city?: string | null
+          created_at?: string | null
+          created_by?: string | null
+          filters?: Json | null
+          id?: string
+          name?: string
+          scrape_schedule?: string | null
+          sources?: string[] | null
+          state?: string | null
+          status?: string | null
+          updated_at?: string | null
+          zip_codes?: string[] | null
+        }
+        Relationships: []
+      }
+      outreach_logs: {
+        Row: {
+          buyer_id: string | null
+          channel: string | null
+          content: string | null
+          created_at: string | null
+          deal_analysis_id: string | null
+          id: string
+          open_rate: number | null
+          reply_text: string | null
+          sent_at: string | null
+          status: string | null
+        }
+        Insert: {
+          buyer_id?: string | null
+          channel?: string | null
+          content?: string | null
+          created_at?: string | null
+          deal_analysis_id?: string | null
+          id?: string
+          open_rate?: number | null
+          reply_text?: string | null
+          sent_at?: string | null
+          status?: string | null
+        }
+        Update: {
+          buyer_id?: string | null
+          channel?: string | null
+          content?: string | null
+          created_at?: string | null
+          deal_analysis_id?: string | null
+          id?: string
+          open_rate?: number | null
+          reply_text?: string | null
+          sent_at?: string | null
+          status?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "outreach_logs_buyer_id_fkey"
+            columns: ["buyer_id"]
+            isOneToOne: false
+            referencedRelation: "buyers"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "outreach_logs_deal_analysis_id_fkey"
+            columns: ["deal_analysis_id"]
+            isOneToOne: false
+            referencedRelation: "deal_analyses"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       profiles: {
         Row: {

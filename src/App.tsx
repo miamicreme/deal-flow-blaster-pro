@@ -13,6 +13,8 @@ import Buyers from "./pages/Buyers";
 import AddProperty from "./pages/AddProperty";
 import AddBuyer from "./pages/AddBuyer";
 import Settings from "./pages/Settings";
+import AdminLogin from "./pages/AdminLogin";
+import AdminDashboard from "./pages/AdminDashboard";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -33,6 +35,8 @@ const App = () => (
             <Route path="/add-property" element={<AddProperty />} />
             <Route path="/add-buyer" element={<AddBuyer />} />
             <Route path="/settings" element={<Settings />} />
+            <Route path="/admin/login" element={<AdminLogin />} />
+            <Route path="/admin/dashboard" element={<AdminDashboard />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>
