@@ -1,4 +1,4 @@
-import { useState } from 'react';
+
 import { Button } from '@/components/ui/button';
 import { ArrowLeft, Plus, Mail, Upload } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
@@ -6,33 +6,12 @@ import { useToast } from '@/hooks/use-toast';
 import MobileLayout from '@/components/MobileLayout';
 import BuyersViewOptions from '@/components/BuyersViewOptions';
 import { Buyer } from '@/types/buyer';
+import { useBuyers } from '@/hooks/useBuyers';
 
 const Buyers = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
-  const [buyers, setBuyers] = useState<Buyer[]>([
-    // Sample data - will be replaced with Supabase data
-    {
-      id: '1',
-      name: 'John Smith',
-      email: 'john@example.com',
-      phone: '(555) 123-4567',
-      location: 'Atlanta, GA',
-      maxBudget: 300000,
-      preferences: 'Single family homes, 3+ bedrooms',
-      created_at: '2024-01-15'
-    },
-    {
-      id: '2',
-      name: 'Sarah Johnson',
-      email: 'sarah@example.com',
-      phone: '(555) 987-6543',
-      location: 'Birmingham, AL',
-      maxBudget: 250000,
-      preferences: 'Investment properties, fix & flip',
-      created_at: '2024-01-20'
-    }
-  ]);
+  const { buyers, loading, deleteBuyer } = useBuyers();
 
   const handleEditBuyer = (buyer: Buyer) => {
     toast({
@@ -42,11 +21,7 @@ const Buyers = () => {
   };
 
   const handleDeleteBuyer = (id: string) => {
-    setBuyers(prev => prev.filter(buyer => buyer.id !== id));
-    toast({
-      title: "Buyer Removed",
-      description: "Buyer has been removed from your list.",
-    });
+    deleteBuyer(id);
   };
 
   const handleEmailBuyer = (buyer: Buyer) => {
@@ -62,6 +37,28 @@ const Buyers = () => {
       description: `Email sent to ${buyers.length} buyers in your list.`,
     });
   };
+
+  if (loading) {
+    return (
+      <MobileLayout>
+        <div className="p-4 space-y-6">
+          <div className="flex items-center gap-4">
+            <Button 
+              variant="ghost" 
+              size="sm"
+              onClick={() => navigate('/dashboard')}
+            >
+              <ArrowLeft className="h-4 w-4" />
+            </Button>
+            <div className="flex-1">
+              <h1 className="text-2xl font-bold">Buyer Management</h1>
+              <p className="text-gray-600 dark:text-gray-400">Loading...</p>
+            </div>
+          </div>
+        </div>
+      </MobileLayout>
+    );
+  }
 
   return (
     <MobileLayout>

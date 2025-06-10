@@ -9,10 +9,178 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      admin_users: {
+        Row: {
+          created_at: string | null
+          id: string
+          role: string | null
+          updated_at: string | null
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          role?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          role?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      buyers: {
+        Row: {
+          created_at: string
+          email: string | null
+          id: string
+          name: string
+          notes: string | null
+          phone: string | null
+          status: string | null
+          tags: string[] | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          email?: string | null
+          id?: string
+          name: string
+          notes?: string | null
+          phone?: string | null
+          status?: string | null
+          tags?: string[] | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          email?: string | null
+          id?: string
+          name?: string
+          notes?: string | null
+          phone?: string | null
+          status?: string | null
+          tags?: string[] | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      campaign_templates: {
+        Row: {
+          content: string
+          created_at: string
+          id: string
+          is_system: boolean | null
+          name: string
+          subject: string | null
+          type: string
+          updated_at: string
+          user_id: string | null
+          variables: Json | null
+        }
+        Insert: {
+          content: string
+          created_at?: string
+          id?: string
+          is_system?: boolean | null
+          name: string
+          subject?: string | null
+          type: string
+          updated_at?: string
+          user_id?: string | null
+          variables?: Json | null
+        }
+        Update: {
+          content?: string
+          created_at?: string
+          id?: string
+          is_system?: boolean | null
+          name?: string
+          subject?: string | null
+          type?: string
+          updated_at?: string
+          user_id?: string | null
+          variables?: Json | null
+        }
+        Relationships: []
+      }
+      campaigns: {
+        Row: {
+          click_count: number | null
+          created_at: string
+          deal_id: string | null
+          id: string
+          name: string
+          open_count: number | null
+          recipient_count: number | null
+          reply_count: number | null
+          scheduled_at: string | null
+          sent_at: string | null
+          status: string
+          template_id: string | null
+          type: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          click_count?: number | null
+          created_at?: string
+          deal_id?: string | null
+          id?: string
+          name: string
+          open_count?: number | null
+          recipient_count?: number | null
+          reply_count?: number | null
+          scheduled_at?: string | null
+          sent_at?: string | null
+          status?: string
+          template_id?: string | null
+          type: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          click_count?: number | null
+          created_at?: string
+          deal_id?: string | null
+          id?: string
+          name?: string
+          open_count?: number | null
+          recipient_count?: number | null
+          reply_count?: number | null
+          scheduled_at?: string | null
+          sent_at?: string | null
+          status?: string
+          template_id?: string | null
+          type?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "campaigns_deal_id_fkey"
+            columns: ["deal_id"]
+            isOneToOne: false
+            referencedRelation: "deals"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       deals: {
         Row: {
+          ai_analysis: Json | null
           bathrooms: number | null
           bedrooms: number | null
+          contact_email: string | null
+          contact_name: string | null
+          contact_phone: string | null
           created_at: string
           description: string | null
           id: string
@@ -30,8 +198,12 @@ export type Database = {
           year_built: number | null
         }
         Insert: {
+          ai_analysis?: Json | null
           bathrooms?: number | null
           bedrooms?: number | null
+          contact_email?: string | null
+          contact_name?: string | null
+          contact_phone?: string | null
           created_at?: string
           description?: string | null
           id?: string
@@ -49,8 +221,12 @@ export type Database = {
           year_built?: number | null
         }
         Update: {
+          ai_analysis?: Json | null
           bathrooms?: number | null
           bedrooms?: number | null
+          contact_email?: string | null
+          contact_name?: string | null
+          contact_phone?: string | null
           created_at?: string
           description?: string | null
           id?: string
@@ -66,6 +242,39 @@ export type Database = {
           updated_at?: string
           user_id?: string
           year_built?: number | null
+        }
+        Relationships: []
+      }
+      follow_up_sequences: {
+        Row: {
+          created_at: string
+          id: string
+          is_active: boolean | null
+          name: string
+          steps: Json
+          trigger_event: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          is_active?: boolean | null
+          name: string
+          steps?: Json
+          trigger_event: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          is_active?: boolean | null
+          name?: string
+          steps?: Json
+          trigger_event?: string
+          updated_at?: string
+          user_id?: string
         }
         Relationships: []
       }
@@ -99,6 +308,36 @@ export type Database = {
           phone?: string | null
           subscription_tier?: string | null
           updated_at?: string
+        }
+        Relationships: []
+      }
+      property_templates: {
+        Row: {
+          created_at: string
+          description: string | null
+          id: string
+          is_premium: boolean | null
+          name: string
+          preview_image: string | null
+          template_config: Json
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          is_premium?: boolean | null
+          name: string
+          preview_image?: string | null
+          template_config: Json
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          is_premium?: boolean | null
+          name?: string
+          preview_image?: string | null
+          template_config?: Json
         }
         Relationships: []
       }

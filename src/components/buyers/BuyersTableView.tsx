@@ -8,7 +8,6 @@ import {
   Mail
 } from 'lucide-react';
 import { BuyersViewProps } from '@/types/buyer';
-import { formatCurrency } from '@/utils/formatters';
 
 const BuyersTableView = ({ buyers, onEdit, onDelete, onEmail }: BuyersViewProps) => {
   return (
@@ -20,8 +19,8 @@ const BuyersTableView = ({ buyers, onEdit, onDelete, onEmail }: BuyersViewProps)
               <tr className="text-left">
                 <th className="p-4 font-semibold">Name</th>
                 <th className="p-4 font-semibold">Email</th>
-                <th className="p-4 font-semibold">Location</th>
-                <th className="p-4 font-semibold">Budget</th>
+                <th className="p-4 font-semibold">Phone</th>
+                <th className="p-4 font-semibold">Status</th>
                 <th className="p-4 font-semibold">Actions</th>
               </tr>
             </thead>
@@ -35,13 +34,26 @@ const BuyersTableView = ({ buyers, onEdit, onDelete, onEmail }: BuyersViewProps)
                       </div>
                       <div>
                         <div className="font-medium">{buyer.name}</div>
-                        <div className="text-sm text-gray-500">{buyer.phone}</div>
+                        {buyer.tags && buyer.tags.length > 0 && (
+                          <div className="text-sm text-gray-500">
+                            {buyer.tags.slice(0, 2).join(', ')}
+                            {buyer.tags.length > 2 && ` +${buyer.tags.length - 2}`}
+                          </div>
+                        )}
                       </div>
                     </div>
                   </td>
-                  <td className="p-4 text-sm">{buyer.email}</td>
-                  <td className="p-4 text-sm">{buyer.location}</td>
-                  <td className="p-4 text-sm font-medium">{formatCurrency(buyer.maxBudget)}</td>
+                  <td className="p-4 text-sm">{buyer.email || 'No email'}</td>
+                  <td className="p-4 text-sm">{buyer.phone || 'No phone'}</td>
+                  <td className="p-4 text-sm">
+                    {buyer.status && (
+                      <span className={`px-2 py-1 rounded-full text-xs ${
+                        buyer.status === 'active' ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'
+                      }`}>
+                        {buyer.status}
+                      </span>
+                    )}
+                  </td>
                   <td className="p-4">
                     <div className="flex gap-2">
                       <Button size="sm" variant="outline" onClick={() => onEmail(buyer)}>

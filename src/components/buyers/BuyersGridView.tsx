@@ -5,12 +5,11 @@ import {
   Edit, 
   Trash2,
   MapPin,
-  DollarSign,
   User,
-  Mail
+  Mail,
+  Tag
 } from 'lucide-react';
 import { BuyersViewProps } from '@/types/buyer';
-import { formatCurrency } from '@/utils/formatters';
 
 const BuyersGridView = ({ buyers, onEdit, onDelete, onEmail }: BuyersViewProps) => {
   return (
@@ -25,7 +24,7 @@ const BuyersGridView = ({ buyers, onEdit, onDelete, onEmail }: BuyersViewProps) 
                 </div>
                 <div>
                   <CardTitle className="text-lg">{buyer.name}</CardTitle>
-                  <CardDescription className="text-sm">{buyer.email}</CardDescription>
+                  <CardDescription className="text-sm">{buyer.email || 'No email'}</CardDescription>
                 </div>
               </div>
               <div className="flex gap-1">
@@ -40,19 +39,44 @@ const BuyersGridView = ({ buyers, onEdit, onDelete, onEmail }: BuyersViewProps) 
           </CardHeader>
           
           <CardContent className="space-y-3">
-            <div className="flex items-center gap-2 text-sm">
-              <MapPin className="h-4 w-4 text-gray-500" />
-              <span>{buyer.location}</span>
-            </div>
+            {buyer.phone && (
+              <div className="flex items-center gap-2 text-sm">
+                <MapPin className="h-4 w-4 text-gray-500" />
+                <span>{buyer.phone}</span>
+              </div>
+            )}
             
-            <div className="flex items-center gap-2 text-sm">
-              <DollarSign className="h-4 w-4 text-gray-500" />
-              <span>{formatCurrency(buyer.maxBudget)}</span>
-            </div>
+            {buyer.status && (
+              <div className="flex items-center gap-2 text-sm">
+                <span className={`px-2 py-1 rounded-full text-xs ${
+                  buyer.status === 'active' ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'
+                }`}>
+                  {buyer.status}
+                </span>
+              </div>
+            )}
+
+            {buyer.tags && buyer.tags.length > 0 && (
+              <div className="flex items-center gap-2 text-sm">
+                <Tag className="h-4 w-4 text-gray-500" />
+                <div className="flex flex-wrap gap-1">
+                  {buyer.tags.slice(0, 2).map((tag, index) => (
+                    <span key={index} className="px-2 py-1 bg-blue-100 text-blue-800 rounded text-xs">
+                      {tag}
+                    </span>
+                  ))}
+                  {buyer.tags.length > 2 && (
+                    <span className="text-xs text-gray-500">+{buyer.tags.length - 2}</span>
+                  )}
+                </div>
+              </div>
+            )}
             
-            <div className="text-sm text-gray-600 dark:text-gray-400">
-              <p className="line-clamp-2">{buyer.preferences}</p>
-            </div>
+            {buyer.notes && (
+              <div className="text-sm text-gray-600 dark:text-gray-400">
+                <p className="line-clamp-2">{buyer.notes}</p>
+              </div>
+            )}
             
             <Button 
               size="sm" 

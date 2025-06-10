@@ -4,15 +4,20 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Home, Users, Mail } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import MobileLayout from '@/components/MobileLayout';
+import { useBuyers } from '@/hooks/useBuyers';
+import { useDeals } from '@/hooks/useDeals';
 
 const Dashboard = () => {
   const navigate = useNavigate();
-  const [stats, setStats] = useState({
-    totalDeals: 0,
-    activeDeals: 0,
-    totalBuyers: 0,
-    emailsSent: 0
-  });
+  const { buyers } = useBuyers();
+  const { deals } = useDeals();
+
+  const stats = {
+    totalDeals: deals.length,
+    activeDeals: deals.filter(deal => deal.status === 'active').length,
+    totalBuyers: buyers.length,
+    emailsSent: 0 // This would come from a campaigns table in the future
+  };
 
   return (
     <MobileLayout>
