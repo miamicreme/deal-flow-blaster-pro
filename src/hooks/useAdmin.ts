@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
@@ -34,8 +33,14 @@ export const useAdmin = () => {
         return;
       }
 
+      // Convert the data to match AdminUser interface
+      const adminUserData: AdminUser = {
+        ...data,
+        permissions: data.permissions as Record<string, boolean> | null
+      };
+
       setIsAdmin(true);
-      setAdminUser(data);
+      setAdminUser(adminUserData);
     } catch (error) {
       console.error('Error checking admin status:', error);
       setIsAdmin(false);
