@@ -1,17 +1,19 @@
 
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeft } from 'lucide-react';
+import { ArrowLeft, Calculator } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
 import MobileLayout from '@/components/MobileLayout';
 import PropertyWizard from '@/components/PropertyWizard';
 import AIValidation from '@/components/AIValidation';
+import DealAnalyzer from '@/components/DealAnalyzer';
 import { useState } from 'react';
 
 const AddProperty = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
   const [showValidation, setShowValidation] = useState(false);
+  const [showAnalyzer, setShowAnalyzer] = useState(false);
   const [propertyData, setPropertyData] = useState<any>(null);
 
   const handlePropertyComplete = (data: any) => {
@@ -41,13 +43,35 @@ const AddProperty = () => {
           >
             <ArrowLeft className="h-4 w-4" />
           </Button>
-          <div>
+          <div className="flex-1">
             <h1 className="text-2xl font-bold">Add Property</h1>
             <p className="text-gray-600 dark:text-gray-400">
-              Create a new deal with AI assistance
+              Create a new deal with AI assistance and analysis
             </p>
           </div>
+          <Button 
+            variant="outline" 
+            size="sm"
+            onClick={() => setShowAnalyzer(!showAnalyzer)}
+          >
+            <Calculator className="h-4 w-4 mr-1" />
+            Analyzer
+          </Button>
         </div>
+
+        {showAnalyzer && (
+          <div className="mb-6">
+            <DealAnalyzer 
+              propertyData={propertyData}
+              onAnalysisComplete={(analysis) => {
+                toast({
+                  title: "Analysis Complete",
+                  description: `Deal score: ${analysis.dealScore}/100`,
+                });
+              }}
+            />
+          </div>
+        )}
 
         {!showValidation ? (
           <PropertyWizard onComplete={handlePropertyComplete} />

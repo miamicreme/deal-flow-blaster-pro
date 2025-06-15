@@ -1,11 +1,11 @@
-
 import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
-import { ArrowLeft, Eye, Edit, Share, Mail, Plus, Search, Filter } from 'lucide-react';
+import { ArrowLeft, Eye, Edit, Share, Mail, Plus, Search, Filter, Calculator } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import DealAnalyzer from '@/components/DealAnalyzer';
 
 interface Deal {
   id: string;
@@ -24,6 +24,8 @@ interface Deal {
 const Deals = () => {
   const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState('');
+  const [showAnalyzer, setShowAnalyzer] = useState(false);
+  const [selectedDeal, setSelectedDeal] = useState<Deal | null>(null);
   const [deals, setDeals] = useState<Deal[]>([
     {
       id: '1',
@@ -77,6 +79,11 @@ const Deals = () => {
 
   const profit = (deal: Deal) => deal.arv - deal.price;
 
+  const handleAnalyzeDeal = (deal: Deal) => {
+    setSelectedDeal(deal);
+    setShowAnalyzer(true);
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100">
       <div className="max-w-7xl mx-auto px-6 py-8">
@@ -94,7 +101,7 @@ const Deals = () => {
           <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
             <div>
               <h1 className="text-4xl font-light text-slate-900 mb-2">Deal Portfolio</h1>
-              <p className="text-slate-600 text-lg">Manage your investment opportunities</p>
+              <p className="text-slate-600 text-lg">Manage your investment opportunities with AI analysis</p>
             </div>
             
             <div className="flex flex-col sm:flex-row gap-4">
@@ -109,6 +116,15 @@ const Deals = () => {
               </div>
               
               <Button 
+                onClick={() => setShowAnalyzer(true)}
+                variant="outline"
+                className="border-slate-200 text-slate-700 hover:bg-slate-50"
+              >
+                <Calculator className="h-4 w-4 mr-2" />
+                Deal Analyzer
+              </Button>
+              
+              <Button 
                 onClick={() => navigate('/create-deal')}
                 className="bg-slate-900 hover:bg-slate-800 text-white px-6 py-2.5"
               >
@@ -118,6 +134,28 @@ const Deals = () => {
             </div>
           </div>
         </div>
+
+        {showAnalyzer && (
+          <div className="mb-8">
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="text-2xl font-semibold">Deal Analysis</h2>
+              <Button 
+                variant="outline" 
+                onClick={() => setShowAnalyzer(false)}
+              >
+                Close Analyzer
+              </Button>
+            </div>
+            <DealAnalyzer 
+              propertyData={selectedDeal ? {
+                price: selectedDeal.price,
+                sqft: selectedDeal.sqft,
+                bedrooms: selectedDeal.bedrooms,
+                bathrooms: selectedDeal.bathrooms
+              } : undefined}
+            />
+          </div>
+        )}
 
         {/* Stats Overview */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
@@ -202,9 +240,14 @@ const Deals = () => {
                         <Eye className="h-3 w-3 mr-1" />
                         View
                       </Button>
-                      <Button size="sm" variant="outline" className="flex-1 text-slate-700 border-slate-200 hover:bg-slate-50">
-                        <Share className="h-3 w-3 mr-1" />
-                        Share
+                      <Button 
+                        size="sm" 
+                        variant="outline" 
+                        className="flex-1 text-slate-700 border-slate-200 hover:bg-slate-50"
+                        onClick={() => handleAnalyzeDeal(deal)}
+                      >
+                        <Calculator className="h-3 w-3 mr-1" />
+                        Analyze
                       </Button>
                       <Button size="sm" className="flex-1 bg-slate-900 hover:bg-slate-800">
                         <Mail className="h-3 w-3 mr-1" />
